@@ -88,7 +88,7 @@ public class Convertidor {
 
 
             if (monedaOrigen.equals("dolares americanos")) {
-                System.out.println("El valor de la  es de " + pluma + " por dolar americano"  + " el total es de " + pluma * cantidad + monedaCambio);
+                System.out.println("El valor es de " + pluma + monedaCambio + " por dolar americano"  + " el total es de " + pluma * cantidad + monedaCambio);
             } else {
                 System.out.println("El valor de la moneda es de " + pluma  + monedaOrigen + " por dolar americano, el total es de " + cantidad/pluma + monedaCambio);
             }
