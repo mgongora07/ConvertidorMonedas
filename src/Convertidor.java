@@ -1,11 +1,11 @@
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Convertidor {
@@ -17,9 +17,10 @@ public class Convertidor {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         String respuesta = response.body();
+        boolean continuar=true;
+        List<String> historial = new ArrayList<>();
 
-
-        while (true) {
+        while (continuar) {
             System.out.println("**********CONVERTIDOR DE DIVISAS***********************");
             System.out.println("1.Covertir dolares a pesos argentinos");
             System.out.println("2.Convertir pesos argentinos a dolares");
@@ -27,16 +28,17 @@ public class Convertidor {
             System.out.println("4.Convertir reales brasilenos a dolares");
             System.out.println("5.Convertir dolares a peso colombiano");
             System.out.println("6.Convertir peso colombiano a dolares");
-            System.out.println("7.Terminar programa");
+            System.out.println("7.Mostrar Historial");
+            System.out.println("8.Terminar programa");
             System.out.println("*******************************************************");
 
             System.out.println("Ingresa una opcion");
 
             Scanner scanner = new Scanner(System.in);
             int opcion = Integer.parseInt(scanner.nextLine());
-            String monedas = "";
-            String monedaOrigen = "";
-            String monedaCambio = "";
+            String monedas="";
+            String monedaOrigen="";
+            String monedaCambio="";
 
 
             switch (opcion) {
@@ -71,29 +73,36 @@ public class Convertidor {
                     monedaCambio = " dolares americanos";
                     break;
                 case 7:
+                    System.out.println("Historial de operaciones:");
+                    for (String operacion : historial) {
+                        System.out.println(operacion);
+                    }
+                    continue;
+                case 8:
                     System.out.println("Programa terminado.");
                     scanner.close();
-                    return;
+                    continuar=false;
+                    break;
                 default:
-                    System.out.println("Opción no válida.");
-                    scanner.close();
-                    return;
+                    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>Opción no válida.<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+                    continue;
             }
 
             System.out.println("Ingresa la cantidad a convertir");
             double cantidad = Double.parseDouble(scanner.nextLine());
 
 
-            var pluma = Cotizaciones.obtenerValor(monedas, respuesta);
-
+            double pluma = Cotizaciones.obtenerValor(monedas, respuesta);
+            String resultado;
 
             if (monedaOrigen.equals("dolares americanos")) {
-                System.out.println("El valor es de " + pluma + monedaCambio + " por dolar americano"  + " el total es de " + pluma * cantidad + monedaCambio);
+                resultado ="El valor es de " + pluma + monedaCambio + " por dolar americano"  + " el total es de " + pluma * cantidad + monedaCambio;
             } else {
-                System.out.println("El valor de la moneda es de " + pluma  + monedaOrigen + " por dolar americano, el total es de " + cantidad/pluma + monedaCambio);
+                resultado="El valor es de la moneda es de " + pluma  + monedaOrigen + " por dolar americano, el total es de " + cantidad/pluma + monedaCambio;
             }
 
-
+            System.out.println(resultado);
+            historial.add(resultado); // Agregar la operación al historial
         }
     }
 
